@@ -7,7 +7,7 @@ CC = g++
 CFLAGS = -std=c++0x -O2 -o ad
 
 all:
-	$(CC) $(CFLAGS) *.cpp
+	$(CC) $(CFLAGS) main.cpp
 
 clean:
 	rm ad

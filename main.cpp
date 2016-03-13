@@ -3,24 +3,37 @@
 #include <iostream>
 #include <math.h>
 #include <iomanip>
+#include "had.h"
 
 #define PI 3.1415926535897
 
+using namespace had;
 using namespace std;
+DECLARE_ADGRAPH();
 
 void printEllipse(unsigned int points, double a, double b)
 {
-  cout << endl <<"x" << "\t" << "y" << endl;
-  cout << "----" << "\t" << "----" << endl;
-  double slice = 2 * PI / points;
+  ADGraph adGraph;
+  
+  cout << endl <<"x" << "\t" << "y" << "\t" << "dx/dslice" << "\t" << "dy/dslice" << endl;
+  cout << "----" << "\t" << "----" << "\t" << "----" << "\t" << "----" << endl;
+  AReal slice = AReal(2 * PI / points);
   
   for(int i = 0; i <= points; ++i)
   {
-    double angle = slice * i;
-    double x = (a * cos(angle));
-    double y = (b * sin(angle));
+    AReal angle = AReal(slice * AReal(i));
+    AReal x = AReal(AReal(a) * AReal(cos(angle)));
+    SetAdjoint(x, 1.0);
+    PropagateAdjoint();
     
-    cout << round(x * 1000.0) / 1000.0 << "\t" << round(y * 1000.0) / 1000.0 << endl;
+    Real dxdslice = GetAdjoint(x);
+    
+    AReal y = AReal(b * sin(angle));
+    SetAdjoint(y, 1.0);
+    PropagateAdjoint();
+    Real dydslice = GetAdjoint(y);
+    
+    cout << round(x.val * 1000.0) / 1000.0 << "\t" << round(y.val * 1000.0) / 1000.0 << "\t" << dxdslice << "\t" << dydslice << endl;
   }
 }
 
