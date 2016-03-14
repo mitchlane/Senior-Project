@@ -20,6 +20,7 @@ void printEllipse(ADGraph ad, unsigned int points, AReal a, AReal b)
   for(int i = 0; i <= points; ++i)
   {
     double angle = slice * i;
+    cout << "theta is " << angle << endl;
     AReal x = a * cos(angle);
     AReal y = b * sin(angle);
     
@@ -27,6 +28,7 @@ void printEllipse(ADGraph ad, unsigned int points, AReal a, AReal b)
     SetAdjoint(x, 1.0);
     PropagateAdjoint();
     double dxda = GetAdjoint(a);
+//    ad.Clear();
 
     // Take the derivative of y with renspet to b
     SetAdjoint(y, 1.0);
