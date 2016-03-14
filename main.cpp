@@ -31,6 +31,7 @@ void printEllipse(unsigned int points, double a0, double b0)
     DScalar y = (bs * sin(angle));
     
     std::cout << x << std::endl;
+    std::cout << y << std::endl << std::endl;
     
 /*
     cout << round(x.getValue() * 1000.0) / 1000.0
