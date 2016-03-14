@@ -3,24 +3,41 @@
 #include <iostream>
 #include <math.h>
 #include <iomanip>
+#include <Eigen/Cholesky>
+#include "autodiff.h"
 
 #define PI 3.1415926535897
 
-using namespace std;
+DECLARE_DIFFSCALAR_BASE();
+typedef Eigen::Vector2d Gradient;
+typedef DScalar1<double, Gradient> DScalar;
 
-void printEllipse(unsigned int points, double a, double b)
+using namespace std;
+void printEllipse(unsigned int points, double a0, double b0)
 {
-  cout << endl <<"x" << "\t" << "y" << endl;
-  cout << "----" << "\t" << "----" << endl;
+  cout << endl <<"x" << "\t" << "y" << "\t" << "dx/da" << "\t" << "dy/db" << endl;
+  cout << "----" << "\t" << "----" << "\t" << "----" << "\t" << "----" << endl;
   double slice = 2 * PI / points;
+  DiffScalarBase::setVariableCount(2);
+  Eigen::Vector2d ab(a0, b0);
+  
+  DScalar as(0, ab[0]);
+  DScalar bs(0, ab[1]);
   
   for(int i = 0; i <= points; ++i)
   {
     double angle = slice * i;
-    double x = (a * cos(angle));
-    double y = (b * sin(angle));
+    DScalar x = (as * cos(angle));
+    DScalar y = (bs * sin(angle));
     
-    cout << round(x * 1000.0) / 1000.0 << "\t" << round(y * 1000.0) / 1000.0 << endl;
+    std::cout << x << std::endl;
+    
+/*
+    cout << round(x.getValue() * 1000.0) / 1000.0
+         << "\t" << round(y.getValue() * 1000.0) / 1000.0
+         << "\t" << x.getGradient() 
+         << "\t" << y.getGradient() << endl;
+*/
   }
 }
 
