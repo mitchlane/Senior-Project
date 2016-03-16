@@ -7,7 +7,6 @@
 #include "autodiff.h"
 
 #define PI 3.1415926535897
-//#define c 0.55195024494
 #define c 0.5522847498
 
 DECLARE_DIFFSCALAR_BASE();
@@ -66,12 +65,9 @@ void printBezierEllipsePartial(double r, double a, double b, int quad)
   {
     t = i / r;
     omt = 1-t;
-    B.x = omt*omt*omt*p0.x + 3*omt*omt*p1.x + 3*omt*t*t*p2.x + t*t*t*p3.x;
-    B.y = omt*omt*omt*p0.y + 3*omt*omt*p1.y + 3*omt*t*t*p2.y + t*t*t*p3.y;
-//    bx = 3*c*omt*omt + 3*omt*t*t + t*t*t;
-//    by = 3*c*t*t*omt + 3*t*omt*omt + omt*omt*omt;
+    B.x = omt*omt*omt*p0.x + 3*omt*omt*t*p1.x + 3*omt*t*t*p2.x + t*t*t*p3.x;
+    B.y = omt*omt*omt*p0.y + 3*omt*omt*t*p1.y + 3*omt*t*t*p2.y + t*t*t*p3.y;
     
-    //printf("t = %lf\n", t);
     printf("(%lf,%lf)\n", B.x, B.y);
   }
   printf("\n\n");
