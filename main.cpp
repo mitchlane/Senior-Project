@@ -7,99 +7,92 @@
 #include "autodiff.h"
 
 #define PI 3.1415926535897
+//#define c 0.55195024494
+#define c 0.5522847498
 
 DECLARE_DIFFSCALAR_BASE();
 typedef Eigen::Vector2d Gradient;
 typedef DScalar1<double, Gradient> DScalar;
+typedef struct{
+  double x;
+  double y;
+}Point;
 
 using namespace std;
-void printEllipse(unsigned int points, double a0, double b0)
+
+void printBezierEllipsePartial(double r, double a, double b, int quad)
 {
-  cout << endl <<"x" << "\t" << "y" << "\t" << "dx/da" << "\t" << "dy/db" << endl;
-  cout << "----" << "\t" << "----" << "\t" << "----" << "\t" << "----" << endl;
-  double slice = 2 * PI / points;
-  DiffScalarBase::setVariableCount(2);
-  Eigen::Vector2d ab(a0, b0);
+
+  Point p0;
+  Point p1;
+  Point p2;
+  Point p3;
   
-  DScalar as(0, ab[0]);
-  DScalar bs(0, ab[1]);
-  
-  for(int i = 0; i <= points; ++i)
+  switch(quad)
   {
-    double angle = slice * i;
-    DScalar x = (as * cos(angle));
-    DScalar y = (bs * sin(angle));
-    
-    std::cout << x << std::endl;
-    std::cout << y << std::endl << std::endl;
-    
-/*
-    cout << round(x.getValue() * 1000.0) / 1000.0
-         << "\t" << round(y.getValue() * 1000.0) / 1000.0
-         << "\t" << x.getGradient() 
-         << "\t" << y.getGradient() << endl;
-*/
+    case 1:
+      p0 = {0.0, 1.0};
+      p1 = {c, 1.0};
+      p2 = {1.0, c};
+      p3 = {1.0, 0.0};
+      break;
+    case 2:
+      p0 = {-1.0, 0.0};
+      p1 = {-1.0, c};
+      p2 = {-c, 1.0};
+      p3 = {0.0, 1.0};
+      break;
+    case 3:
+      p0 = {0.0, -1.0};
+      p1 = {-c, -1.0};
+      p2 = {-1.0, -c};
+      p3 = {-1.0, 0.0};
+      break;
+    case 4:
+      p0 = {1.0, 0.0};
+      p1 = {1.0, -c};
+      p2 = {c, -1.0};
+      p3 = {0.0, -1.0};
+      break;
   }
+
+  int i;
+  double t;
+  double omt;
+  Point B;
+  
+  printf("QUAD %d\n--------\n", quad);
+  for(i = 0; i <= r; ++i)
+  {
+    t = i / r;
+    omt = 1-t;
+    B.x = omt*omt*omt*p0.x + 3*omt*omt*p1.x + 3*omt*t*t*p2.x + t*t*t*p3.x;
+    B.y = omt*omt*omt*p0.y + 3*omt*omt*p1.y + 3*omt*t*t*p2.y + t*t*t*p3.y;
+//    bx = 3*c*omt*omt + 3*omt*t*t + t*t*t;
+//    by = 3*c*t*t*omt + 3*t*omt*omt + omt*omt*omt;
+    
+    //printf("t = %lf\n", t);
+    printf("(%lf,%lf)\n", B.x, B.y);
+  }
+  printf("\n\n");
 }
 
 int main(int argc, char** argv)
 {
-  unsigned int resolution;
-  double xRad;
-  double yRad;
+  double r, a, b;
   
-  cout << "Enter the resolution of the ellipse." << endl;
-  cin >> resolution;
-  cout << "Enter the x radius." << endl;
-  cin >> xRad;
-  cout << "Enter the y radius." << endl;
-  cin >> yRad;
-  
-  printEllipse(resolution, xRad, yRad);
+  cout << "Enter Resolution" << endl;
+  cin >> r;
+  cout << "Enter 'A' value" << endl;
+  cin >> a;
+  cout << "Enter 'B' value" << endl;
+  cin >> b;
 
+  printBezierEllipsePartial(r, a, b, 1);
+  printBezierEllipsePartial(r, a, b, 2);
+  printBezierEllipsePartial(r, a, b, 3);
+  printBezierEllipsePartial(r, a, b, 4);
+  
+  
   return 0;
 }
-
-/*
-Enter the resolution of the ellipse.
-10
-Enter the x radius.
-6
-Enter the y radius.
-8
-
-x	y	dx/da	dy/db
-----	----	----	----
-[6, grad=[1;  0]]
-[0, grad=[0;  0]]
-
-[4.8541, grad=[0.809;  0]]
-[4.70228, grad=[0.5878;  0]]
-
-[1.8541, grad=[0.309;  0]]
-[7.60845, grad=[0.9511;  0]]
-
-[-1.8541, grad=[-0.309;  -0]]
-[7.60845, grad=[0.9511;  0]]
-
-[-4.8541, grad=[-0.809;  -0]]
-[4.70228, grad=[0.5878;  0]]
-
-[-6, grad=[-1;  -0]]
-[7.4705e-13, grad=[9.338e-14;  0]]
-
-[-4.8541, grad=[-0.809;  -0]]
-[-4.70228, grad=[-0.5878;  -0]]
-
-[-1.8541, grad=[-0.309;  -0]]
-[-7.60845, grad=[-0.9511;  -0]]
-
-[1.8541, grad=[0.309;  0]]
-[-7.60845, grad=[-0.9511;  -0]]
-
-[4.8541, grad=[0.809;  0]]
-[-4.70228, grad=[-0.5878;  -0]]
-
-[6, grad=[1;  0]]
-[-1.4941e-12, grad=[-1.868e-13;  -0]]
-*/
