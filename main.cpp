@@ -12,6 +12,7 @@
 DECLARE_DIFFSCALAR_BASE();
 typedef Eigen::Vector2d Gradient;
 typedef DScalar1<double, Gradient> DScalar;
+
 typedef struct{
   double x;
   double y;
@@ -26,6 +27,17 @@ void printBezierEllipsePartial(double r, double a, double b, int quad)
   Point p1;
   Point p2;
   Point p3;
+
+  int i;
+  double t;
+  double omt;
+  
+  // Note: setting the varaible has to happen first.
+  DiffScalarBase::setVariableCount(2);
+  Eigen::Vector2d ab(a, b);
+  DScalar as(0, ab[0]);
+  DScalar bs(0, ab[1]);
+  DScalar bx, by;
   
   switch(quad)
   {
@@ -54,21 +66,17 @@ void printBezierEllipsePartial(double r, double a, double b, int quad)
       p3 = {0.0, -1.0};
       break;
   }
-
-  int i;
-  double t;
-  double omt;
-  Point B;
   
   printf("QUAD %d\n--------\n", quad);
   for(i = 0; i <= r; ++i)
   {
     t = i / r;
     omt = 1-t;
-    B.x = omt*omt*omt*p0.x + 3*omt*omt*t*p1.x + 3*omt*t*t*p2.x + t*t*t*p3.x;
-    B.y = omt*omt*omt*p0.y + 3*omt*omt*t*p1.y + 3*omt*t*t*p2.y + t*t*t*p3.y;
+    bx = as*(omt*omt*omt*p0.x + 3*omt*omt*t*p1.x + 3*omt*t*t*p2.x + t*t*t*p3.x);
+    by = bs*(omt*omt*omt*p0.y + 3*omt*omt*t*p1.y + 3*omt*t*t*p2.y + t*t*t*p3.y);
     
-    printf("(%lf,%lf)\n", B.x, B.y);
+    std::cout << bx << std::endl;
+    std::cout << by << std::endl << std::endl;
   }
   printf("\n\n");
 }
