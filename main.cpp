@@ -18,7 +18,6 @@ void printEllipse(unsigned int points, double a0, double b0)
   cout << endl <<"x" << "\t" << "y" << "\t" << "dx/da" << "\t" << "dy/db" << endl;
   cout << "----" << "\t" << "----" << "\t" << "----" << "\t" << "----" << endl;
   double slice = 2 * PI / points;
-  DiffScalarBase::setVariableCount(2);
   Eigen::Vector2d ab(a0, b0);
   
   DScalar as(0, ab[0]);
@@ -44,9 +43,11 @@ void printEllipse(unsigned int points, double a0, double b0)
 
 int main(int argc, char** argv)
 {
+  DiffScalarBase::setVariableCount(2);
   unsigned int resolution;
   double xRad;
   double yRad;
+  DScalar d_xRad;
   
   cout << "Enter the resolution of the ellipse." << endl;
   cin >> resolution;
@@ -54,6 +55,7 @@ int main(int argc, char** argv)
   cin >> xRad;
   cout << "Enter the y radius." << endl;
   cin >> yRad;
+  d_xRad = xRad;
   
   printEllipse(resolution, xRad, yRad);
 
