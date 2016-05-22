@@ -11,28 +11,42 @@ typedef Eigen::VectorXd Gradient;
 typedef DScalar1<double, Gradient> DScalar;
 
 using namespace std;
+
+void test_func(DScalar one, DScalar two) {
+  // do nothing
+}
+
 int main(int argc, char** argv)
 {
   vector<double> vars(10);
   int count = 6;
-  scanf("%d", &count);
   DiffScalarBase::setVariableCount(count);
 
-  for(int i = 0; i <= 9; ++i)
-  {
-    vars[i] = i;
-  }
+  double test = 100;
+  DScalar x;
+  x = test;
+  double test2 = x;
+  DScalar y;
+  DScalar z;
+  DScalar yy = 1.0;
+  yy = y + z;
+  double t = static_cast<double>(yy);
+  static_cast<double>(test2);
+  DScalar ct;
+  ct = (DScalar)1.0;
   
-                // 0 + 2*1 + 3*2 + 4*3 + 5*4 + 6*5 + 7*6 + 8*7 + 9*8 + 0*9
- // DScalar test = a + 2*b + 3*c + 4*d + 5*e + 6*f + 7*g + 8*h + 9*i + 0*j;
-
-  DScalar a(0, 4.0);
-//  DScalar b(1, 6.0);
-//  DScalar c(2, 6.0);
-  DScalar x = (DScalar)1.0;
-  //DScalar test = (a*a) - b + vars[9] + c;
-  DScalar test = a + x;
-  std::cout << test << std::endl;
+  z = y = x;
+  
+  cout << z << endl;
+  
+  z = y = 2.4;
+  y = 1;
+  
+  y = std::abs(z);
+  abs(z);
+  
+  cout << z << endl;
+  cout << ct << endl;
   
   return 0;
 }

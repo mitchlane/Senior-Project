@@ -7,7 +7,7 @@ CC = g++
 CFLAGS = -I /usr/include/eigen3 -std=c++0x -O2 -o ad
 
 all:
-	$(CC) $(CFLAGS) main.cpp
+	$(CC) $(CFLAGS) main2.cpp
 
 clean:
 	rm ad

@@ -28,6 +28,9 @@
 #include <Eigen/Core>
 #include <cmath>
 #include <stdexcept>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
 /**
  * \brief Base class of all automatic differentiation types
@@ -102,14 +105,16 @@ public:
 	// ======================================================================
 
 	/// Create a new constant automatic differentiation scalar
-	explicit DScalar1(Scalar value = (Scalar) 0) : value(value) {
+	DScalar1(double value = (double) 0) : value(value) {//value(static_cast<Scalar>(value)) {
 		size_t variableCount = getVariableCount();
 		grad.resize(variableCount);
 		grad.setZero();
 	}
 
+//        DScalar1(int value = (Scalar) 0) : value(static_cast<Scalar>(value)) {}
+
 	/// Construct a new scalar with the specified value and one first derivative set to 1
-	DScalar1(size_t index, const Scalar &value)
+	DScalar1(size_t index, const double &value)
 	 : value(value) {
 		size_t variableCount = getVariableCount();
 		grad.resize(variableCount);
@@ -118,7 +123,7 @@ public:
 	}
 
 	/// Construct a scalar associated with the given gradient
-	DScalar1(Scalar value, const Gradient &grad)
+	DScalar1(double value, const Gradient &grad)
 	 : value(value), grad(grad) { }
 
 	/// Copy constructor
@@ -152,6 +157,10 @@ public:
 	inline DScalar1& operator+=(const Scalar &v) {
 		value += v;
 		return *this;
+	}
+
+      operator double() const {
+	  return value;
 	}
 
 	/// @}
@@ -332,8 +341,10 @@ public:
 	/// @{ \name Comparison and assignment
 	// ======================================================================
 
-	inline void operator=(const DScalar1& s) { value = s.value; grad = s.grad; }
-	inline void operator=(const Scalar &v) { value = v; grad.setZero(); }
+	inline DScalar1 operator=(const DScalar1& s) { value = s.value; grad = 
+s.grad; return s;}
+	inline Scalar operator=(const Scalar &v) { value = v; grad.setZero(); 
+return v;}
 	inline bool operator<(const DScalar1& s) const { return value < s.value; }
 	inline bool operator<=(const DScalar1& s) const { return value <= s.value; }
 	inline bool operator>(const DScalar1& s) const { return value > s.value; }
